@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Approval System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #1a237e;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #2d3436;
+            font-weight: 500;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        button {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #303f9f;
+        }
+
+        .result {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .approved {
+            background: #e8f5e9;
+            border: 1px solid #43a047;
+            color: #2e7d32;
+        }
+
+        .denied {
+            background: #ffebee;
+            border: 1px solid #e53935;
+            color: #c62828;
+        }
+
+        .adjustment-notice {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #fff3e0;
+            border-left: 4px solid #ffa726;
+            color: #ef6c00;
+            border-radius: 3px;
+        }
+
+        .loading {
+            text-align: center;
+            margin: 1rem 0;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Purchase Approval Request</h1>
+
+    <form id="approvalForm">
+        <div class="form-group">
+            <label for="personalId">Personal ID</label>
+            <input type="text" id="personalId" required
+                   pattern="\d{11}"
+                   title="11-digit Personal ID">
+        </div>
+
+        <div class="form-group">
+            <label for="amount">Request Amount (€)</label>
+            <input type="number" id="amount" required
+                   min="200" max="5000" step="0.01">
+        </div>
+
+        <div class="form-group">
+            <label for="period">Payment Period (Months)</label>
+            <input type="number" id="period" required
+                   min="6" max="24">
+        </div>
+
+        <button type="submit">Check Approval</button>
+    </form>
+
+    <div class="loading" id="loading">Processing request...</div>
+
+    <div class="result" id="result">
+        <h2 id="resultTitle"></h2>
+        <p id="resultAmount" ></p>
+        <div id="adjustmentNotice" class="adjustment-notice"></div>
+    </div>
+</div>
+
+<script>
+    const form = document.getElementById('approvalForm');
+    const resultDiv = document.getElementById('result');
+    const loading = document.getElementById('loading');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultAmount = document.getElementById('resultAmount');
+    const adjustmentNotice = document.getElementById('adjustmentNotice');
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        loading.style.display = 'block';
+        resultDiv.style.display = 'none';
+
+        const requestData = {
+            personalId: document.getElementById('personalId').value,
+            requestedAmount: parseFloat(document.getElementById('amount').value),
+            paymentPeriodMonths: parseInt(document.getElementById('period').value)
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/purchase/approval', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            const data = await response.json();
+
+            resultDiv.className = 'result ' + (data.approved ? 'approved' : 'denied');
+            resultTitle.textContent = data.approved ? 'Approved!' : 'Not Approved';
+            resultAmount.textContent = data.approved ?
+                `Maximum Approved Amount: €${data.approvedAmount.toFixed(2)}` :
+                'Maximum Approval Amount: €0.00';
+
+            // Show adjustment notice if needed
+            if(data.adjustedPeriod !== requestData.paymentPeriodMonths) {
+                adjustmentNotice.textContent =
+                    `Note: Payment period adjusted to ${data.adjustedPeriod} months for approval.`;
+                adjustmentNotice.style.display='block';
+            } else {
+                adjustmentNotice.textContent = '';
+                adjustmentNotice.style.display='none';
+            }
+
+        } catch (error) {
+            resultDiv.className = 'result denied';
+            resultTitle.textContent = 'Error';
+            resultAmount.textContent = 'Unable to process request. Please try again.';
+        } finally {
+            loading.style.display = 'none';
+            resultDiv.style.display = 'block';
+        }
+    });
+</script>
+</body>
+</html>
