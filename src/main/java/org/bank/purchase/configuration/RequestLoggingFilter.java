@@ -5,10 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.UUID;
 
@@ -23,7 +25,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
 
         if (!request.getRequestURI().startsWith("/swagger-ui") &&
-            !request.getRequestURI().startsWith("/v3/api-docs")) {
+                !request.getRequestURI().startsWith("/v3/api-docs")) {
             String correlationId = UUID.randomUUID().toString();
             MDC.put("correlationId", correlationId);
 

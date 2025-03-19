@@ -1,6 +1,6 @@
 # Purchase Approval System
 
-A Spring Boot-based microservice for evaluating customer purchase requests and determining approval decisions.
+A Spring Boot-based service for evaluating customer purchase requests and determining approval decisions.
 
 ## Features
 
@@ -25,10 +25,9 @@ A Spring Boot-based microservice for evaluating customer purchase requests and d
 - Spring Web
 - Spring Validation
 - SpringDoc OpenAPI
+- Spring Security
 - Docker
 - Maven
-- Spring Security
-- Lombok
 - JUnit 5/Mockito
 
 ## Installation
@@ -60,8 +59,8 @@ A Spring Boot-based microservice for evaluating customer purchase requests and d
 
 ### Local Setup
 ```bash
-git clone https://github.com/yourrepo/purchase-approval.git
-cd purchase-approval
+git clone https://github.com/raveenadeshmane/bank_purchase.git
+cd bank_purchase
 mvn clean install
-java -jar target/purchase-approval-1.0.0.jar
+java -jar target/bank_purchase-1.0.0-SNAPSHOT.jar
 

@@ -132,7 +132,7 @@
     <div class="result" id="result">
         <h2 id="resultTitle"></h2>
         <p id="resultAmount" ></p>
-        <div id="adjustmentNotice" class="adjustment-notice"></div>
+        <div id="adjustmentNotice" class="adjustment-notice" style="'display': none"></div>
     </div>
 </div>
 
@@ -177,10 +177,8 @@
             if(data.adjustedPeriod !== requestData.paymentPeriodMonths) {
                 adjustmentNotice.textContent =
                     `Note: Payment period adjusted to ${data.adjustedPeriod} months for approval.`;
-                adjustmentNotice.style.display='block';
             } else {
-                adjustmentNotice.textContent = '';
-                adjustmentNotice.style.display='none';
+                adjustmentNotice.textContent = `Note: For given period ${data.adjustedPeriod}  month.`;
             }
 
         } catch (error) {

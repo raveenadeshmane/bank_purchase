@@ -46,7 +46,4 @@
     <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
         <resetJUL>true</resetJUL>
     </contextListener>
-
-    <logger name="org.springframework" level="INFO"/>
-    <logger name="com.example.purchase" level="DEBUG"/>
 </configuration>

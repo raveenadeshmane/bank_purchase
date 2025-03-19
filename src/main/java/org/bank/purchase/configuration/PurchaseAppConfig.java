@@ -46,8 +46,14 @@ public class PurchaseAppConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/purchase/approval").permitAll()
-                        .requestMatchers("/", "/index.html", "/static/**", "/actuator/**").permitAll()
+                        .requestMatchers(
+                                "/api/purchase/approval",
+                                "/",
+                                "/index.html",
+                                "/static/**",
+                                "/actuator/**",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf

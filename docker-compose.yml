@@ -3,14 +3,14 @@ version: '3.8'
 services:
   purchase-approval:
     build: .
-    container_name: purchase-approval-app
+    container_name: bank-purchase-app
     ports:
       - "8080:8080"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
+    volumes:
+      - ./logs:/app/logs
     logging:
       driver: json-file
       options:
         max-size: "10m"
         max-file: "5"
-        tag: "purchase-approval"
+        tag: "bank-purchase"
