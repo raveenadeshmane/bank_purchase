@@ -45,7 +45,7 @@ public class PurchaseApprovalController {
     )
     @PostMapping("/approval")
     public ResponseEntity<ApprovalResponse> approvePurchase(@Valid @RequestBody @Schema(description = "Purchase request details") ApprovalRequest request) {
-        ApprovalResult result = service.calculateApproval(request.personalId(), request.requestedAmount(), request.paymentPeriodMonths());
+        ApprovalResult result = service.evaluatePurchaseApproval(request.personalId(), request.requestedAmount(), request.paymentPeriodMonths());
         return ResponseEntity.ok(new ApprovalResponse(result));
     }
 }

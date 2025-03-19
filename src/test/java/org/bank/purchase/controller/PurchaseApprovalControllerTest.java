@@ -30,7 +30,7 @@ class PurchaseApprovalControllerTest {
 
     @Test
     void shouldReturnApprovalDecision() throws Exception {
-        given(service.calculateApproval(anyString(), anyDouble(), anyInt()))
+        given(service.evaluatePurchaseApproval(anyString(), anyDouble(), anyInt()))
                 .willReturn(new ApprovalResult(true, 1000.0, 12));
 
         mockMvc.perform(post("/api/purchase/approval")
